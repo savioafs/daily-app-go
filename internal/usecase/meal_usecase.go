@@ -115,11 +115,12 @@ func (u *MealUsecase) MetricsMealsByUser(userID string) (map[string]float32, err
 		}
 	}
 
-	dietPercent := float32(dietMealsCount) / float32(len(meals)) * 100
-	nonDietPercent := float32(nonDietMealsCount) / float32(len(meals)) * 100
+	totalMeals := (len(meals))
+	dietPercent := float32(dietMealsCount) / float32(totalMeals) * 100
+	nonDietPercent := float32(nonDietMealsCount) / float32(totalMeals) * 100
 
 	metrics := map[string]float32{
-		"total_meals":          float32(len(meals)),
+		"total_meals":          float32(totalMeals),
 		"total_meals_diet":     float32(dietMealsCount),
 		"total_meals_non_diet": float32(nonDietMealsCount),
 		"diet_percent":         dietPercent,
