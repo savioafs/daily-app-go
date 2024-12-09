@@ -4,6 +4,7 @@ import "time"
 
 type MealInputDTO struct {
 	Name        string    `json:"name"`
+	UserID      string    `json:"user_id"`
 	Description string    `json:"description"`
 	Date        time.Time `json:"date"`
 	IsDiet      bool      `json:"is_diet"`
@@ -11,6 +12,7 @@ type MealInputDTO struct {
 
 type MealOutputDTO struct {
 	ID          string    `json:"id"`
+	UserID      string    `json:"user_id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Date        time.Time `json:"date"`

@@ -1,7 +1,9 @@
 package repository
 
-import "savioafs/daily-diet-app-go/internal/model"
+import (
+	"savioafs/daily-diet-app-go/internal/entity"
+)
 
 type MealStorer interface {
-	Create(meal model.Meal) error
+	Create(meal *entity.Meal) (string, error)
 }
