@@ -8,6 +8,7 @@ type User interface {
 	// Create User
 	// UpdateUser
 	// Delete User - With Delete all meals of user
+	// Get UseProfile (não aqui, mas para puxar as metricas e tudo)
 }
 
 type MealStorer interface {
