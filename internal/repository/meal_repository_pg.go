@@ -62,3 +62,39 @@ func (r *MealRepositoryPG) GetMealByID(id string) (*entity.Meal, error) {
 
 	return &meal, nil
 }
+
+func (r *MealRepositoryPG) GetAllMealsByUser(user_id string) ([]entity.Meal, error) {
+	query := "SELECT * FROM meals WHERE user_id = $1"
+
+	rows, err := r.DB.Query(query, user_id)
+	if err != nil {
+		return nil, err
+	}
+
+	var meals []entity.Meal
+
+	for rows.Next() {
+		var meal entity.Meal
+
+		err = rows.Scan(
+			&meal.ID,
+			&meal.UserID,
+			&meal.Name,
+			&meal.Description,
+			&meal.Date,
+			&meal.IsDiet)
+
+		if err != nil {
+			return nil, err
+		}
+
+		meals = append(meals, meal)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return meals, nil
+}

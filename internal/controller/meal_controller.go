@@ -19,6 +19,14 @@ func NewMealController(mealUsecase usecase.MealUsecase) *MealController {
 
 func (c *MealController) Create(ctx *gin.Context) {
 	var mealInput dto.MealInputDTO
+	userID := ctx.DefaultQuery("user_id", "")
+	if userID == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "user_id is required",
+		})
+		return
+	}
+
 	err := ctx.BindJSON(&mealInput)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -27,7 +35,7 @@ func (c *MealController) Create(ctx *gin.Context) {
 		return
 	}
 
-	meal, err := entity.NewMeal(mealInput.UserID, mealInput.Name, mealInput.Description, mealInput.Date, mealInput.IsDiet)
+	meal, err := entity.NewMeal(userID, mealInput.Name, mealInput.Description, mealInput.Date, mealInput.IsDiet)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message:": err.Error(),
@@ -78,4 +86,47 @@ func (c *MealController) GetMealByID(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, mealOutput)
+}
+
+func (c *MealController) GetAllMealsByUser(ctx *gin.Context) {
+	userID := ctx.DefaultQuery("user_id", "")
+
+	if userID == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message:": "user id is required",
+		})
+		return
+	}
+
+	var mealsOutput []dto.MealOutputDTO
+
+	meals, err := c.MealUseCase.GetAllMealsByUser(userID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message:": err.Error(),
+		})
+		return
+	}
+
+	if len(meals) == 0 {
+		ctx.JSON(http.StatusOK, gin.H{
+			"message:": "no meals found for user",
+		})
+	}
+
+	for _, meal := range meals {
+
+		mealOutput := dto.MealOutputDTO{
+			ID:          meal.ID,
+			UserID:      meal.UserID,
+			Name:        meal.Name,
+			Description: meal.Description,
+			Date:        meal.Date,
+			IsDiet:      meal.IsDiet,
+		}
+
+		mealsOutput = append(mealsOutput, mealOutput)
+	}
+
+	ctx.JSON(http.StatusOK, mealsOutput)
 }

@@ -20,6 +20,7 @@ func SetupRoutes(dbConn *sql.DB) *gin.Engine {
 	{
 		mealsGroup.POST("", mealController.Create)
 		mealsGroup.GET("/:id", mealController.GetMealByID)
+		mealsGroup.GET("", mealController.GetAllMealsByUser)
 	}
 
 	return server

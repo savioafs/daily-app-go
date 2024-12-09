@@ -41,3 +41,20 @@ func (u *MealUsecase) FindMealByID(id string) (*entity.Meal, error) {
 
 	return meal, nil
 }
+
+func (u *MealUsecase) GetAllMealsByUser(user_id string) ([]entity.Meal, error) {
+	if user_id == "" {
+		return nil, errors.New("user id cannot empty")
+	}
+
+	meals, err := u.repository.GetAllMealsByUser(user_id)
+	if err != nil {
+		return nil, err
+	}
+
+	if meals == nil {
+		return nil, errors.New("meals by id not found")
+	}
+
+	return meals, nil
+}
