@@ -109,3 +109,33 @@ func (r *MealRepositoryPG) UpdateMeal(id string, meal *entity.Meal) error {
 
 	return nil
 }
+
+func (r *MealRepositoryPG) GetMealsByDay(date string) ([]entity.Meal, error) {
+	query := "SELECT * FROM meals WHERE DATE(date) = $1"
+
+	rows, err := r.DB.Query(query, date)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var meals []entity.Meal
+	for rows.Next() {
+		var meal entity.Meal
+		err := rows.Scan(
+			&meal.ID,
+			&meal.UserID,
+			&meal.Name,
+			&meal.Description,
+			&meal.Date,
+			&meal.IsDiet)
+		if err != nil {
+			return nil, err
+		}
+
+		meals = append(meals, meal)
+	}
+
+	return meals, nil
+}
