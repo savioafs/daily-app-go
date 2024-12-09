@@ -10,14 +10,13 @@ import (
 )
 
 func SetupRoutes(dbConn *sql.DB) *gin.Engine {
+	server := gin.Default()
 
 	mealRepository := repository.NewMealRepositoryPG(dbConn)
 	mealUseCase := usecase.NewMealUseCase(mealRepository)
 	mealController := controller.NewMealController(mealUseCase)
 
-	router := gin.Default()
-
-	mealsGroup := router.Group("/meals")
+	mealsGroup := server.Group("/meals")
 	{
 		mealsGroup.GET("/ping", func(c *gin.Context) {
 			c.JSON(200, gin.H{
@@ -27,5 +26,5 @@ func SetupRoutes(dbConn *sql.DB) *gin.Engine {
 		mealsGroup.GET("", mealController.Create)
 	}
 
-	return router
+	return server
 }
