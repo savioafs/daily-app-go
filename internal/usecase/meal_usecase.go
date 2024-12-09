@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"errors"
 	"savioafs/daily-diet-app-go/internal/entity"
 	"savioafs/daily-diet-app-go/internal/repository"
 )
@@ -20,6 +21,23 @@ func (u *MealUsecase) Create(meal *entity.Meal) (*entity.Meal, error) {
 	}
 
 	meal.ID = mealID
+
+	return meal, nil
+}
+
+func (u *MealUsecase) FindMealByID(id string) (*entity.Meal, error) {
+	if id == "" {
+		return nil, errors.New("meal id cannot empty")
+	}
+
+	meal, err := u.repository.GetMealByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if meal == nil {
+		return nil, errors.New("meal not found")
+	}
 
 	return meal, nil
 }

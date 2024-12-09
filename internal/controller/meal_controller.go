@@ -56,3 +56,26 @@ func (c *MealController) Create(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusCreated, mealOutput)
 }
+
+func (c *MealController) GetMealByID(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	meal, err := c.MealUseCase.FindMealByID(id)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message:": err.Error(),
+		})
+		return
+	}
+
+	mealOutput := dto.MealOutputDTO{
+		ID:          meal.ID,
+		UserID:      meal.UserID,
+		Name:        meal.Name,
+		Description: meal.Description,
+		Date:        meal.Date,
+		IsDiet:      meal.IsDiet,
+	}
+
+	ctx.JSON(http.StatusOK, mealOutput)
+}
