@@ -1,0 +1,9 @@
+PUT http://localhost:8080/meals/071eba2b-1809-403b-93f4-441ceaaa1b1a HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Confirmação Alt",
+  "description": "Alt Alt",
+  "date": "2024-12-09T14:30:00Z",
+  "is_diet": false
+}

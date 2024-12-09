@@ -130,3 +130,20 @@ func (u *MealUsecase) MetricsMealsByUser(userID string) (map[string]float32, err
 	return metrics, nil
 
 }
+
+func (u *MealUsecase) UpdateMeal(id string, meal *entity.Meal) error {
+	if id == "" {
+		return errors.New(" id cannot empty")
+	}
+
+	if meal == nil {
+		return errors.New("meal details cannot be nil")
+	}
+
+	err := u.repository.UpdateMeal(id, meal)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

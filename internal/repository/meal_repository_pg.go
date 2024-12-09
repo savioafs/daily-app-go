@@ -63,10 +63,10 @@ func (r *MealRepositoryPG) GetMealByID(id string) (*entity.Meal, error) {
 	return &meal, nil
 }
 
-func (r *MealRepositoryPG) GetAllMealsByUser(user_id string) ([]entity.Meal, error) {
+func (r *MealRepositoryPG) GetAllMealsByUser(userID string) ([]entity.Meal, error) {
 	query := "SELECT * FROM meals WHERE user_id = $1"
 
-	rows, err := r.DB.Query(query, user_id)
+	rows, err := r.DB.Query(query, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -97,4 +97,15 @@ func (r *MealRepositoryPG) GetAllMealsByUser(user_id string) ([]entity.Meal, err
 	}
 
 	return meals, nil
+}
+
+func (r *MealRepositoryPG) UpdateMeal(id string, meal *entity.Meal) error {
+	query := "UPDATE meals SET name = $1, description = $2, date = $3, is_diet = $4  WHERE id = $5"
+
+	_, err := r.DB.Exec(query, meal.Name, meal.Description, meal.Date, meal.IsDiet, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

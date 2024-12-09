@@ -182,3 +182,36 @@ func (c *MealController) MetricsMealsByUser(ctx *gin.Context) {
 		"non_diet_percent":     metrics["non_diet_percent"],
 	})
 }
+
+func (c *MealController) UpdateMeal(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	if id == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message:": "id is required",
+		})
+		return
+	}
+
+	var meal entity.Meal
+
+	err := ctx.BindJSON(&meal)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message:": "invalid input",
+		})
+		return
+	}
+
+	err = c.MealUseCase.UpdateMeal(id, &meal)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message:": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "successfully",
+	})
+}
