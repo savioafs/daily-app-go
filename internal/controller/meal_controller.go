@@ -128,3 +128,57 @@ func (c *MealController) GetAllMealsByUser(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, mealsOutput)
 }
+
+func (c *MealController) GetMealsUserByStatus(ctx *gin.Context) {
+	userID := ctx.DefaultQuery("user_id", "")
+	status := ctx.DefaultQuery("status", "false")
+
+	if userID == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message:": "user id is required",
+		})
+		return
+	}
+
+	var boolStatus bool
+	if status == "true" {
+		boolStatus = true
+	}
+
+	meals, err := c.MealUseCase.GetMealsUserByStatus(userID, boolStatus)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message:": "could not retrieve meals",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, meals)
+}
+
+func (c *MealController) MetricsMealsByUser(ctx *gin.Context) {
+	userID := ctx.DefaultQuery("user_id", "")
+
+	if userID == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message:": "user id is required",
+		})
+		return
+	}
+
+	metrics, err := c.MealUseCase.MetricsMealsByUser(userID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message:": "cannot get metrics by user",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"total_meals":          metrics["total_meals"],
+		"total_meals_diet":     metrics["total_meals_diet"],
+		"total_meals_non_diet": metrics["total_meals_non_diet"],
+		"diet_percent":         metrics["diet_percent"],
+		"non_diet_percent":     metrics["non_diet_percent"],
+	})
+}
