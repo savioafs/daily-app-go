@@ -19,6 +19,11 @@ func SetupRoutes(dbConn *sql.DB) *gin.Engine {
 
 	mealsGroup := router.Group("/meals")
 	{
+		mealsGroup.GET("/ping", func(c *gin.Context) {
+			c.JSON(200, gin.H{
+				"message": "pong",
+			})
+		})
 		mealsGroup.GET("", mealController.Create)
 	}
 
