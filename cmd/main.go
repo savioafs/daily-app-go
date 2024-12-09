@@ -11,6 +11,8 @@ func main() {
 		panic(err)
 	}
 
+	defer dbConn.Close()
+
 	server := config.SetupRoutes(dbConn)
 
 	server.Run(":8080")

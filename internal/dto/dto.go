@@ -16,3 +16,17 @@ type MealOutputDTO struct {
 	Date        time.Time `json:"date"`
 	IsDiet      bool      `json:"is_diet"`
 }
+
+type UserInputDTO struct {
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type UserOutputDTO struct {
+	ID    string          `json:"id"`
+	Name  string          `json:"name"`
+	Email string          `json:"email"`
+	Meals []MealOutputDTO `json:"meals"`
+}
