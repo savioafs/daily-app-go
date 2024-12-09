@@ -43,8 +43,6 @@ func (c *MealController) Create(ctx *gin.Context) {
 		return
 	}
 
-	meal.Validate()
-
 	createdMeal, err := c.MealUseCase.Create(meal)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
