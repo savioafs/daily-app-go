@@ -32,3 +32,11 @@ type UserOutputDTO struct {
 	Email string          `json:"email"`
 	Meals []MealOutputDTO `json:"meals"`
 }
+
+type MetricsOutputDTO struct {
+	TotalMeals        int     `json:"total_meals"`
+	TotalMealsDiet    int     `json:"total_meals_diet"`
+	TotalMealsNonDiet int     `json:"total_meals_non_diet"`
+	DietPercent       float64 `json:"diet_percent"`
+	NonDietPercent    float64 `json:"non_diet_percent"`
+}

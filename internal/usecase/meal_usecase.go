@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"savioafs/daily-diet-app-go/internal/dto"
 	"savioafs/daily-diet-app-go/internal/entity"
 	"savioafs/daily-diet-app-go/internal/repository"
 )
@@ -89,18 +90,18 @@ func (u *MealUsecase) GetMealsUserByStatus(userID string, status bool) ([]entity
 
 }
 
-func (u *MealUsecase) MetricsMealsByUser(userID string) (map[string]float32, error) {
+func (u *MealUsecase) MetricsMealsByUser(userID string) (dto.MetricsOutputDTO, error) {
 	if userID == "" {
-		return nil, errors.New("user id cannot empty")
+		return dto.MetricsOutputDTO{}, errors.New("user id cannot empty")
 	}
 
 	meals, err := u.repository.GetAllMealsByUser(userID)
 	if err != nil {
-		return nil, err
+		return dto.MetricsOutputDTO{}, err
 	}
 
 	if meals == nil {
-		return nil, errors.New("meals by user not found")
+		return dto.MetricsOutputDTO{}, errors.New("meals by user not found")
 	}
 
 	var (
@@ -119,15 +120,23 @@ func (u *MealUsecase) MetricsMealsByUser(userID string) (map[string]float32, err
 	dietPercent := float32(dietMealsCount) / float32(totalMeals) * 100
 	nonDietPercent := float32(nonDietMealsCount) / float32(totalMeals) * 100
 
-	metrics := map[string]float32{
-		"total_meals":          float32(totalMeals),
-		"total_meals_diet":     float32(dietMealsCount),
-		"total_meals_non_diet": float32(nonDietMealsCount),
-		"diet_percent":         dietPercent,
-		"non_diet_percent":     nonDietPercent,
+	metricsOutput := dto.MetricsOutputDTO{
+		TotalMeals:        totalMeals,
+		TotalMealsDiet:    dietMealsCount,
+		TotalMealsNonDiet: nonDietMealsCount,
+		DietPercent:       float64(dietPercent),
+		NonDietPercent:    float64(nonDietPercent),
 	}
 
-	return metrics, nil
+	// metrics := map[string]float32{
+	// 	"total_meals":          float32(totalMeals),
+	// 	"total_meals_diet":     float32(dietMealsCount),
+	// 	"total_meals_non_diet": float32(nonDietMealsCount),
+	// 	"diet_percent":         dietPercent,
+	// 	"non_diet_percent":     nonDietPercent,
+	// }
+
+	return metricsOutput, nil
 
 }
 

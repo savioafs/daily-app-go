@@ -174,13 +174,7 @@ func (c *MealController) MetricsMealsByUser(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"total_meals":          metrics["total_meals"],
-		"total_meals_diet":     metrics["total_meals_diet"],
-		"total_meals_non_diet": metrics["total_meals_non_diet"],
-		"diet_percent":         metrics["diet_percent"],
-		"non_diet_percent":     metrics["non_diet_percent"],
-	})
+	ctx.JSON(http.StatusOK, metrics)
 }
 
 func (c *MealController) UpdateMeal(ctx *gin.Context) {
