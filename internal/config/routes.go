@@ -7,9 +7,10 @@ import (
 	"savioafs/daily-diet-app-go/internal/usecase"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-chi/jwtauth"
 )
 
-func SetupRoutes(dbConn *sql.DB) *gin.Engine {
+func SetupRoutes(dbConn *sql.DB, jwtAuth *jwtauth.JWTAuth) *gin.Engine {
 	server := gin.Default()
 
 	mealRepository := repository.NewMealRepositoryPG(dbConn)
@@ -28,11 +29,13 @@ func SetupRoutes(dbConn *sql.DB) *gin.Engine {
 
 	userRepository := repository.NewUserRepositoryPG(dbConn)
 	userUsecase := usecase.NewUserUseCase(userRepository)
-	userController := controller.NewUserController(userUsecase)
+	userController := controller.NewUserController(userUsecase, jwtAuth, 30)
 
 	usersGroup := server.Group("/users")
 	{
 		usersGroup.POST("", userController.Create)
+		usersGroup.POST("/generate_token", userController.GetJWT)
+		usersGroup.GET("/:email", userController.FindByEmail)
 	}
 
 	return server

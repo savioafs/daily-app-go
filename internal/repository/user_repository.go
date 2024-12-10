@@ -28,3 +28,25 @@ func (r *UserRepositoryPG) Create(user *entity.User) error {
 
 	return nil
 }
+
+func (r *UserRepositoryPG) FindByEmail(email string) (*entity.User, error) {
+	stmt, err := r.DB.Prepare("SELECT id, name, email, password FROM users WHERE email = $1")
+	if err != nil {
+		return nil, err
+	}
+
+	defer stmt.Close()
+
+	var user entity.User
+
+	err = stmt.QueryRow(email).Scan(
+		&user.ID,
+		&user.Name,
+		&user.Email,
+		&user.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}

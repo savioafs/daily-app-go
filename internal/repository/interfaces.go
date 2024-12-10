@@ -6,7 +6,7 @@ import (
 
 type UserStorer interface {
 	Create(user *entity.User) error
-	// UpdateUser
+	FindByEmail(email string) (*entity.User, error)
 	// Delete User - With Delete all meals of user
 	// Get UseProfile (não aqui, mas para puxar as metricas e tudo)
 }

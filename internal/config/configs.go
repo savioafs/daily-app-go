@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/go-chi/jwtauth"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
@@ -17,12 +18,13 @@ func init() {
 	}
 }
 
-func ConnectDB() (*sql.DB, error) {
+func LoadConfigs() (*sql.DB, *jwtauth.JWTAuth, error) {
 	host := os.Getenv("DB_HOST")
 	port := os.Getenv("DB_PORT")
 	user := os.Getenv("DB_USER")
 	password := os.Getenv("DB_PASSWORD")
 	dbname := os.Getenv("DB_NAME")
+	jwtSecret := os.Getenv("JWT_SECRET")
 
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s  sslmode=disable", host, port, user, password, dbname)
 
@@ -36,5 +38,7 @@ func ConnectDB() (*sql.DB, error) {
 		panic(err)
 	}
 
-	return db, nil
+	configToken := jwtauth.New("HS256", []byte(jwtSecret), nil)
+
+	return db, configToken, nil
 }

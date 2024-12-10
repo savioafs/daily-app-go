@@ -27,10 +27,18 @@ type UserInputDTO struct {
 }
 
 type UserOutputDTO struct {
-	ID    string          `json:"id"`
-	Name  string          `json:"name"`
-	Email string          `json:"email"`
-	Meals []MealOutputDTO `json:"meals"`
+	ID    string `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+
+type GetJWTInput struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type GetJWTOutput struct {
+	AccessToken string `json:"access_token"`
 }
 
 type MetricsOutputDTO struct {
