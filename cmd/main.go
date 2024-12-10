@@ -6,14 +6,14 @@ import (
 
 func main() {
 
-	dbConn, jwtAuth, err := config.LoadConfigs()
+	dbConn, jwtAuth, expiresIn, err := config.LoadConfigs()
 	if err != nil {
 		panic(err)
 	}
 
 	defer dbConn.Close()
 
-	server := config.SetupRoutes(dbConn, jwtAuth)
+	server := config.SetupRoutes(dbConn, expiresIn, jwtAuth)
 
 	server.Run(":8080")
 }

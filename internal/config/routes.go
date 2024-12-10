@@ -3,6 +3,7 @@ package config
 import (
 	"database/sql"
 	"savioafs/daily-diet-app-go/internal/controller"
+	"savioafs/daily-diet-app-go/internal/middleware"
 	"savioafs/daily-diet-app-go/internal/repository"
 	"savioafs/daily-diet-app-go/internal/usecase"
 
@@ -10,7 +11,7 @@ import (
 	"github.com/go-chi/jwtauth"
 )
 
-func SetupRoutes(dbConn *sql.DB, jwtAuth *jwtauth.JWTAuth) *gin.Engine {
+func SetupRoutes(dbConn *sql.DB, expiresIn int, jwtAuth *jwtauth.JWTAuth) *gin.Engine {
 	server := gin.Default()
 
 	mealRepository := repository.NewMealRepositoryPG(dbConn)
@@ -19,6 +20,8 @@ func SetupRoutes(dbConn *sql.DB, jwtAuth *jwtauth.JWTAuth) *gin.Engine {
 
 	mealsGroup := server.Group("/meals")
 	{
+		mealsGroup.Use(middleware.JWTAuthMiddleware(jwtAuth))
+
 		mealsGroup.POST("", mealController.Create)
 		mealsGroup.GET("/:id", mealController.GetMealByID)
 		mealsGroup.GET("", mealController.GetAllMealsByUser)
@@ -29,7 +32,7 @@ func SetupRoutes(dbConn *sql.DB, jwtAuth *jwtauth.JWTAuth) *gin.Engine {
 
 	userRepository := repository.NewUserRepositoryPG(dbConn)
 	userUsecase := usecase.NewUserUseCase(userRepository)
-	userController := controller.NewUserController(userUsecase, jwtAuth, 30)
+	userController := controller.NewUserController(userUsecase, jwtAuth, expiresIn)
 
 	usersGroup := server.Group("/users")
 	{
