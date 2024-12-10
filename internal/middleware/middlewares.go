@@ -25,11 +25,14 @@ func JWTAuthMiddleware(jwtAuth *jwtauth.JWTAuth) gin.HandlerFunc {
 			return
 		}
 
-		if claims["sub"] == nil || claims["sub"] == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid token payload"})
+		userID, exists := claims["sub"].(string)
+		if !exists || userID == "" {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "user_id not found in token"})
 			c.Abort()
 			return
 		}
+
+		c.Set("user_id", userID)
 
 		c.Next()
 	}

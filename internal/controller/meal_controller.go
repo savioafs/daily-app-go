@@ -5,6 +5,7 @@ import (
 	"savioafs/daily-diet-app-go/internal/dto"
 	"savioafs/daily-diet-app-go/internal/entity"
 	"savioafs/daily-diet-app-go/internal/usecase"
+	"savioafs/daily-diet-app-go/internal/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,11 +20,9 @@ func NewMealController(mealUsecase usecase.MealUsecase) *MealController {
 
 func (c *MealController) Create(ctx *gin.Context) {
 	var mealInput dto.MealInputDTO
-	userID := ctx.DefaultQuery("user_id", "")
-	if userID == "" {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "user_id is required",
-		})
+
+	userID, valid := utils.GetUserIDFromContext(ctx)
+	if !valid {
 		return
 	}
 
@@ -87,7 +86,10 @@ func (c *MealController) GetMealByID(ctx *gin.Context) {
 }
 
 func (c *MealController) GetAllMealsByUser(ctx *gin.Context) {
-	userID := ctx.DefaultQuery("user_id", "")
+	userID, valid := utils.GetUserIDFromContext(ctx)
+	if !valid {
+		return
+	}
 
 	if userID == "" {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -130,15 +132,12 @@ func (c *MealController) GetAllMealsByUser(ctx *gin.Context) {
 }
 
 func (c *MealController) GetMealsUserByStatus(ctx *gin.Context) {
-	userID := ctx.DefaultQuery("user_id", "")
-	status := ctx.DefaultQuery("status", "false")
-
-	if userID == "" {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message:": "user id is required",
-		})
+	userID, valid := utils.GetUserIDFromContext(ctx)
+	if !valid {
 		return
 	}
+
+	status := ctx.DefaultQuery("status", "false")
 
 	var boolStatus bool
 	if status == "true" {
@@ -157,7 +156,10 @@ func (c *MealController) GetMealsUserByStatus(ctx *gin.Context) {
 }
 
 func (c *MealController) MetricsMealsByUser(ctx *gin.Context) {
-	userID := ctx.DefaultQuery("user_id", "")
+	userID, valid := utils.GetUserIDFromContext(ctx)
+	if !valid {
+		return
+	}
 
 	if userID == "" {
 		ctx.JSON(http.StatusBadRequest, gin.H{

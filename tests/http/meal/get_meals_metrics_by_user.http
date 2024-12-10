@@ -1,5 +1,6 @@
 @baseURL = http://localhost:8080
-@user_id = 4127ed91-d179-433e-9d41-a87338c28614
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzM4NTY2NTQsInN1YiI6Ijc5YzAxMThhLWVlOWEtNDEzYS05OTcwLWVkYTY4OGE4NjYyOSJ9.AaEG2r0pkF4y6o9msGLkO69P2EvyJexH4Tf8KErQQJg
 
 
-GET {{baseURL}}/meals/metrics?user_id={{user_id}} HTTP/1.1
+GET {{baseURL}}/meals/metrics HTTP/1.1
+Authorization: Bearer {{token}}
