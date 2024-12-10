@@ -211,3 +211,26 @@ func (c *MealController) UpdateMeal(ctx *gin.Context) {
 		"message": "successfully",
 	})
 }
+
+func (c *MealController) DeleteMeal(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	if id == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message:": "id is required",
+		})
+		return
+	}
+
+	err := c.MealUseCase.DeleteMeal(id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message:": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "deleted with success",
+	})
+}

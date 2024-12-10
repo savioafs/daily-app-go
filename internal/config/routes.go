@@ -28,6 +28,7 @@ func SetupRoutes(dbConn *sql.DB, expiresIn int, jwtAuth *jwtauth.JWTAuth) *gin.E
 		mealsGroup.GET("/status", mealController.GetMealsUserByStatus)
 		mealsGroup.GET("/metrics", mealController.MetricsMealsByUser)
 		mealsGroup.PUT("/:id", mealController.UpdateMeal)
+		mealsGroup.DELETE("/:id", mealController.DeleteMeal)
 	}
 
 	userRepository := repository.NewUserRepositoryPG(dbConn)

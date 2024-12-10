@@ -16,6 +16,7 @@ type MealStorer interface {
 	GetMealByID(id string) (*entity.Meal, error)
 	GetAllMealsByUser(userID string) ([]entity.Meal, error)
 	UpdateMeal(id string, meal *entity.Meal) error
+	DeleteMeal(id string) error
 
 	// DeleteMeal(id string) error
 }

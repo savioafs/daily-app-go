@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 	"savioafs/daily-diet-app-go/internal/dto"
 	"savioafs/daily-diet-app-go/internal/entity"
 	"savioafs/daily-diet-app-go/internal/repository"
@@ -128,14 +129,6 @@ func (u *MealUsecase) MetricsMealsByUser(userID string) (dto.MetricsOutputDTO, e
 		NonDietPercent:    float64(nonDietPercent),
 	}
 
-	// metrics := map[string]float32{
-	// 	"total_meals":          float32(totalMeals),
-	// 	"total_meals_diet":     float32(dietMealsCount),
-	// 	"total_meals_non_diet": float32(nonDietMealsCount),
-	// 	"diet_percent":         dietPercent,
-	// 	"non_diet_percent":     nonDietPercent,
-	// }
-
 	return metricsOutput, nil
 
 }
@@ -152,6 +145,19 @@ func (u *MealUsecase) UpdateMeal(id string, meal *entity.Meal) error {
 	err := u.repository.UpdateMeal(id, meal)
 	if err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (u *MealUsecase) DeleteMeal(id string) error {
+	if id == "" {
+		return errors.New("meal id cannot empty")
+	}
+
+	err := u.repository.DeleteMeal(id)
+	if err != nil {
+		return fmt.Errorf("failed to delete meal: %w", err)
 	}
 
 	return nil

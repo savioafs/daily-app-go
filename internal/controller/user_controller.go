@@ -49,7 +49,7 @@ func (c *UserController) GetJWT(ctx *gin.Context) {
 
 	_, tokenString, _ := c.Jwt.Encode(map[string]interface{}{
 		"sub": userFind.ID,
-		"exp": time.Now().Add(time.Second * time.Duration(c.JwtExpiresIn)).Unix(),
+		"exp": time.Now().Add(time.Hour * time.Duration(c.JwtExpiresIn)).Unix(),
 	})
 
 	accessToken := dto.GetJWTOutput{

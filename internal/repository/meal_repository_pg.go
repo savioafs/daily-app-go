@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"savioafs/daily-diet-app-go/internal/entity"
 )
 
@@ -110,9 +111,18 @@ func (r *MealRepositoryPG) UpdateMeal(id string, meal *entity.Meal) error {
 		return errors.New("invalid meal id")
 	}
 
-	_, err = r.DB.Exec(query, meal.Name, meal.Description, meal.Date, meal.IsDiet, id)
+	result, err := r.DB.Exec(query, meal.Name, meal.Description, meal.Date, meal.IsDiet, id)
 	if err != nil {
 		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to check rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return errors.New("no meal found with the given id")
 	}
 
 	return nil
@@ -146,4 +156,24 @@ func (r *MealRepositoryPG) GetMealsByDay(date string) ([]entity.Meal, error) {
 	}
 
 	return meals, nil
+}
+
+func (r *MealRepositoryPG) DeleteMeal(id string) error {
+	query := "DELETE FROM meals WHERE id = $1"
+
+	result, err := r.DB.Exec(query, id)
+	if err != nil {
+		return fmt.Errorf("database error: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to check rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return errors.New("no meal found with the given id")
+	}
+
+	return nil
 }

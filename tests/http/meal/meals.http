@@ -1,5 +1,5 @@
 @baseURL = http://localhost:8080/meals 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzM4NTg1MTUsInN1YiI6Ijc5YzAxMThhLWVlOWEtNDEzYS05OTcwLWVkYTY4OGE4NjYyOSJ9.2vGEo71O2m9tMqXBATxxvyD0yUXuWhti1lJNbobZG9g
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzQ5Mzk5NDEsInN1YiI6Ijc5YzAxMThhLWVlOWEtNDEzYS05OTcwLWVkYTY4OGE4NjYyOSJ9.JJv0Ddr7ZxlzdlfKVjAKQs-O1WW6Pdu6rDIfMvPxZf8
 
 ### Create Meal 
 POST {{baseURL}} HTTP/1.1
@@ -27,9 +27,8 @@ Authorization: Bearer {{token}}
 GET {{baseURL}}/status?status={{status}} HTTP/1.1
 Authorization: Bearer {{token}}
 
-
 ### Update meal
-@meal_id = 633acaeb-58aa-4406-895e-692266982c1e
+@meal_id = 46604385-ad36-4bd7-a18d-e86cd513fae1
 PUT {{baseURL}}/{{meal_id}} HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -40,3 +39,8 @@ Authorization: Bearer {{token}}
   "date": "2024-12-09T14:30:00Z",
   "is_diet": false
 }
+
+### Delete meal
+@meal_id = 46604385-ad36-4bd7-a18d-e86cd513fae1
+DELETE  {{baseURL}}/{{meal_id}} HTTP/1.1
+Authorization: Bearer {{token}}
