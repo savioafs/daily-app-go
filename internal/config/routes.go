@@ -26,5 +26,14 @@ func SetupRoutes(dbConn *sql.DB) *gin.Engine {
 		mealsGroup.PUT("/:id", mealController.UpdateMeal)
 	}
 
+	userRepository := repository.NewUserRepositoryPG(dbConn)
+	userUsecase := usecase.NewUserUseCase(userRepository)
+	userController := controller.NewUserController(userUsecase)
+
+	usersGroup := server.Group("/users")
+	{
+		usersGroup.POST("", userController.Create)
+	}
+
 	return server
 }

@@ -1,1 +1,5 @@
-GET http://localhost:8080/meals/metrics?user_id=123e4567-e89b-12d3-a456-426614174000 HTTP/1.1
+@baseURL = http://localhost:8080
+@user_id = 4127ed91-d179-433e-9d41-a87338c28614
+
+
+GET {{baseURL}}/meals/metrics?user_id={{user_id}} HTTP/1.1

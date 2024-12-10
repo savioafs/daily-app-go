@@ -2,9 +2,8 @@ package repository
 
 import (
 	"database/sql"
+	"errors"
 	"savioafs/daily-diet-app-go/internal/entity"
-
-	"github.com/google/uuid"
 )
 
 type MealRepositoryPG struct {
@@ -16,7 +15,7 @@ func NewMealRepositoryPG(db *sql.DB) *MealRepositoryPG {
 }
 
 func (r *MealRepositoryPG) Create(meal *entity.Meal) (string, error) {
-	mealID := uuid.NewString()
+
 	var id string
 
 	stmt, err := r.DB.Prepare("INSERT INTO meals (id, user_id, name, description, date, is_diet) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id")
@@ -26,7 +25,7 @@ func (r *MealRepositoryPG) Create(meal *entity.Meal) (string, error) {
 
 	defer stmt.Close()
 
-	err = stmt.QueryRow(mealID, meal.UserID, meal.Name, meal.Description, meal.Date, meal.IsDiet).Scan(&id)
+	err = stmt.QueryRow(meal.ID, meal.UserID, meal.Name, meal.Description, meal.Date, meal.IsDiet).Scan(&id)
 	if err != nil {
 		return "", err
 	}
@@ -102,7 +101,16 @@ func (r *MealRepositoryPG) GetAllMealsByUser(userID string) ([]entity.Meal, erro
 func (r *MealRepositoryPG) UpdateMeal(id string, meal *entity.Meal) error {
 	query := "UPDATE meals SET name = $1, description = $2, date = $3, is_diet = $4  WHERE id = $5"
 
-	_, err := r.DB.Exec(query, meal.Name, meal.Description, meal.Date, meal.IsDiet, id)
+	mealFind, err := r.GetMealByID(id)
+	if err != nil {
+		return err
+	}
+
+	if mealFind == nil {
+		return errors.New("invalid meal id")
+	}
+
+	_, err = r.DB.Exec(query, meal.Name, meal.Description, meal.Date, meal.IsDiet, id)
 	if err != nil {
 		return err
 	}
