@@ -1,5 +1,0 @@
-@baseURL = http://localhost:8080
-@user_id = 4127ed91-d179-433e-9d41-a87338c28614
-@status = true
-
-GET {{baseURL}}/meals/status?user_id={{user_id}}&status={{status}} HTTP/1.1
